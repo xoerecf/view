@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+  <title>Live 172</title>
+  <style>
+    body,
+    html {
+      overflow: hidden
+    }
+
+    .tag {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      font-size: 11px;
+      color: rgb(0, 0, 0);
+      background-color: #ffffffe1;
+      padding: 2px 4px;
+      border-radius: 2px;
+      opacity: 0.1;
+    }
+
+    iframe {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      overflow: hidden
+    }
+
+    /* #wx_login {
+            display: none;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: rgba(255, 255, 255, 1);
+            background-color: #00ad2ee1;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 100;
+        } */
+    #overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 99;
+    }
+
+    #wx_login {
+      display: none;
+      position: fixed;
+      left: 50%;
+      bottom: 21%;
+      transform: translate(-50%, -50%);
+      font-size: 16px;
+      color: #ffffff;
+      background-color: #28d648;
+      padding: 16px 20px 16px 50px;
+      font-family: "PingFang SC", "Microsoft YaHei", "微软雅黑", "宋体", sans-serif;
+      border-radius: 8px;
+      white-space: nowrap;
+      z-index: 100;
+      text-decoration: none;
+      font-weight: 500;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 16px rgba(7, 193, 96, 0.3);
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      background-image: url(//82319kbdg.yunlidai.com/assets/img/icon_weixin.f821b76c.svg);
+      background-repeat: no-repeat;
+      background-position: 15px center;
+      background-size: 24px 24px;
+    }
+
+    #wx_login:hover {
+      /* background: linear-gradient(135deg, #06ad56 0%, #059a4d 100%); */
+      box-shadow: 0 6px 24px rgba(7, 193, 96, 0.4);
+      transform: translate(-50%, -50%) translateY(-2px);
+    }
+
+    #wx_login:active {
+      /* transform: translate(-50%, -50%) translateY(0); */
+      box-shadow: 0 2px 8px rgba(7, 193, 96, 0.3);
+    }
+  </style>
+  <script>
+
+    // 授权站 base 地址（PHP 已预拼 "?turl="，剥掉得到干净 base；不授权时为空）
+    var AUTH_BASE = ''.replace(/[?&]turl=$/, '');
+
+    // 登记一个 query 参数，可连续调用：addParam(list, 'name', value)
+    function addParam(list, name, value) {
+      if (value === undefined || value === null || value === '') return list;
+      list.push(encodeURIComponent(name) + '=' + encodeURIComponent(value));
+      return list;
+    }
+
+    // base + 参数列表 -> 完整地址
+    function buildUrl(base, list) {
+      if (!base) return '';
+      if (!list.length) return base;
+      var sep = /[?&]$/.test(base) ? '' : (base.indexOf('?') === -1 ? '?' : '&');
+      return base + sep + list.join('&');
+    }
+
+    // 微信授权跳转地址
+    function buildWxAuthUrl() {
+      var params = [];
+      addParam(params, 'turl', window.location.href);
+      addParam(params, 'liveUrl', live_url);
+      return buildUrl(AUTH_BASE, params);
+    }
+
+    // 把当前页面的 query 原样透传到直播间地址
+    function appendPageQuery(url) {
+      var params = [];
+      new URLSearchParams(window.location.search).forEach(function (value, name) {
+        addParam(params, name, value);
+      });
+      return buildUrl(url, params);
+    }
+
+    // wechat
+    function isWechatBrowser() { return -1 !== navigator.userAgent.toLowerCase().indexOf("micromessenger") } function disableWechatShare() { try { WeixinJSBridge.call("hideOptionMenu") } catch (e) { console.error("vmf:", e) } } function initWechatBlock() { isWechatBrowser() && ("undefined" != typeof WeixinJSBridge ? disableWechatShare() : document.addEventListener("WeixinJSBridgeReady", disableWechatShare, !1)) } "loading" === document.readyState ? document.addEventListener("DOMContentLoaded", initWechatBlock) : initWechatBlock();
+
+    var isWxAuth = "0";
+    var live_url = "https://lkjhijne.yunlidai.com";
+    // let live_url = "//82319kbdg.yunlidai.com";
+    // let isWxAuth = 1;
+
+    if (!isWechatBrowser()) {
+      window.location.href = live_url;
+    }
+  </script>
+</head>
+
+<body>
+
+  <!-- <div id="overlay"></div> -->
+  <a id="wx_login" href="#">微信授权登陆</a>
+
+  <script>
+    var wxLoginLink = document.getElementById('wx_login');
+    console.log('lv-2.1_4')
+    if (isWxAuth == 1) {
+      wxLoginLink.style.display = 'block';
+    }
+    if (window.location.search.includes('sign')) {
+      wxLoginLink.style.display = 'none';
+    }
+    wxLoginLink.href = buildWxAuthUrl();
+  </script>
+
+  <!-- iframe -->
+  <iframe id="liveIframe" autoplay allow="autoplay; fullscreen" allowfullscreen src="" frameborder="0"></iframe>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', function () {
+      var liveIframe = document.getElementById('liveIframe');
+      liveIframe.src = window.location.search.includes('sign')
+        ? appendPageQuery(live_url || '')
+        : live_url;
+    });
+    if (window.location.search.includes('debug=1')) {
+      var vconsoleScript = document.createElement('script');
+      vconsoleScript.src = 'https://unpkg.com/vconsole@latest/dist/vconsole.min.js';
+      document.head.appendChild(vconsoleScript);
+      vconsoleScript.onload = function () {
+        var vconsole = new VConsole();
+      };
+    }
+  </script>
+  <!-- disable to share -->
+  <div class="tag">v3.0.15</div>
+  <!-- annal -->
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+  <script>LA.init({ id: "3Ml3KDfvM5yF1Qns", ck: "3Ml3KDfvM5yF1Qns" })</script>
+</body>
+
+</html>
