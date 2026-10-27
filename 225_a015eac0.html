@@ -136,7 +136,7 @@
     function isWechatBrowser() { return -1 !== navigator.userAgent.toLowerCase().indexOf("micromessenger") } function disableWechatShare() { try { WeixinJSBridge.call("hideOptionMenu") } catch (e) { console.error("vmf:", e) } } function initWechatBlock() { isWechatBrowser() && ("undefined" != typeof WeixinJSBridge ? disableWechatShare() : document.addEventListener("WeixinJSBridgeReady", disableWechatShare, !1)) } "loading" === document.readyState ? document.addEventListener("DOMContentLoaded", initWechatBlock) : initWechatBlock();
 
     var isWxAuth = "1";
-    var live_url = "http://jkeix31.yunlidai.com/";
+    var live_url = "https://jkeix31.yunlidai.com/";
     // let live_url = "//82319kbdg.yunlidai.com";
     // let isWxAuth = 1;
 
