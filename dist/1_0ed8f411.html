@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+  <title>Live 1</title>
+  <style>
+    body,
+    html {
+      overflow: hidden
+    }
+
+    .tag {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      font-size: 11px;
+      color: rgb(0, 0, 0);
+      background-color: #ffffffe1;
+      padding: 2px 4px;
+      border-radius: 2px;
+      opacity: 0.1;
+    }
+
+    iframe {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      overflow: hidden
+    }
+
+    /* #wx_login {
+            display: none;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: rgba(255, 255, 255, 1);
+            background-color: #00ad2ee1;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 100;
+        } */
+    #overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 99;
+    }
+
+    #wx_login {
+      display: none;
+      position: fixed;
+      left: 50%;
+      bottom: 21%;
+      transform: translate(-50%, -50%);
+      font-size: 16px;
+      color: #ffffff;
+      background-color: #28d648;
+      padding: 16px 20px 16px 50px;
+      font-family: "PingFang SC", "Microsoft YaHei", "微软雅黑", "宋体", sans-serif;
+      border-radius: 8px;
+      white-space: nowrap;
+      z-index: 100;
+      text-decoration: none;
+      font-weight: 500;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 16px rgba(7, 193, 96, 0.3);
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      background-image: url(//82319kbdg.yunlidai.com/assets/img/icon_weixin.f821b76c.svg);
+      background-repeat: no-repeat;
+      background-position: 15px center;
+      background-size: 24px 24px;
+    }
+
+    #wx_login:hover {
+      /* background: linear-gradient(135deg, #06ad56 0%, #059a4d 100%); */
+      box-shadow: 0 6px 24px rgba(7, 193, 96, 0.4);
+      transform: translate(-50%, -50%) translateY(-2px);
+    }
+
+    #wx_login:active {
+      /* transform: translate(-50%, -50%) translateY(0); */
+      box-shadow: 0 2px 8px rgba(7, 193, 96, 0.3);
+    }
+  </style>
+  <script src="../assets/js/common.js"></script>
+  <script>
+
+    function fixUrlQuery(url) {
+      if (!url || typeof url !== 'string') return url;
+      const qIndex = url.indexOf('?');
+      const aIndex = url.indexOf('&');
+      if (qIndex === -1 && aIndex === -1) return url;
+      const splitIndex = (qIndex === -1) ? aIndex : (aIndex === -1 ? qIndex : Math.min(qIndex, aIndex));
+      let base = url.substring(0, splitIndex);
+      let query = url.substring(splitIndex);
+      query = query.replace(/\?/g, '&')
+        .replace(/&+/g, '&')
+        .replace(/^&+/, '');
+      return query ? base + '?' + query : base;
+    }
+
+    // wechat
+    function isWechatBrowser() { return -1 !== navigator.userAgent.toLowerCase().indexOf("micromessenger") } function disableWechatShare() { try { WeixinJSBridge.call("hideOptionMenu") } catch (e) { console.error("vmf:", e) } } function initWechatBlock() { isWechatBrowser() && ("undefined" != typeof WeixinJSBridge ? disableWechatShare() : document.addEventListener("WeixinJSBridgeReady", disableWechatShare, !1)) } "loading" === document.readyState ? document.addEventListener("DOMContentLoaded", initWechatBlock) : initWechatBlock();
+
+    var isWxAuth = "1";
+    var live_url = "http://kjbhh.yunlidai.com/?inviteCode=w5px8e2u2kU";
+    // let live_url = "//82319kbdg.yunlidai.com";
+    // let isWxAuth = 1;
+
+    if (!isWechatBrowser()) {
+      window.location.href = live_url;
+    }
+  </script>
+</head>
+
+<body>
+
+  <!-- <div id="overlay"></div> -->
+  <a id="wx_login" href="#">微信授权登陆</a>
+
+  <script>
+    // 如果 isWxAuth 为 0，不显示登陆按钮
+    if (isWxAuth == 1) {
+      // document.getElementById('overlay').style.display = 'block';
+      document.getElementById('wx_login').style.display = 'block';
+    }
+    let wx_login_link = document.getElementById('wx_login');
+    console.log('lv-2.1_4')
+    let wxAuthLink = "http://seawind4x4.com/v4/auth.php?pindex=0?turl=" + encodeURIComponent(window.location.href);
+    wx_login_link.href = fixUrlQuery(wxAuthLink);
+  </script>
+
+  <!-- iframe -->
+  <iframe id="liveIframe" autoplay allow="autoplay; fullscreen" allowfullscreen src="" frameborder="0"></iframe>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', function () {
+      var liveIframe = document.getElementById('liveIframe');
+      // 如果有 openid 参数，添加到直播间链接
+      if (window.location.search.includes('sign')) {
+        var baseUrl = live_url || '';
+        var query = decodeURIComponent(window.location.search || '');
+        if (query.charAt(0) === '?') {
+          query = query.slice(1);
+        }
+        query = query.replace(/\?/g, '&').replace(/^&+/, '');
+        if (query) {
+          if (baseUrl.indexOf('?') === -1) {
+            liveIframe.src = baseUrl + '?' + query;
+          } else {
+            var lastChar = baseUrl.charAt(baseUrl.length - 1);
+            var joiner = (lastChar === '?' || lastChar === '&') ? '' : '&';
+            liveIframe.src = baseUrl + joiner + query;
+          }
+        } else {
+          liveIframe.src = baseUrl;
+        }
+      } else {
+        liveIframe.src = live_url;
+      }
+    });
+    if (window.location.search.includes('debug=1')) {
+      var vconsoleScript = document.createElement('script');
+      vconsoleScript.src = 'https://unpkg.com/vconsole@latest/dist/vconsole.min.js';
+      document.head.appendChild(vconsoleScript);
+      vconsoleScript.onload = function () {
+        var vconsole = new VConsole();
+      };
+    }
+  </script>
+  <!-- disable to share -->
+  <div class="tag">v3.0.5</div>
+  <!-- annal -->
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+  <script>LA.init({ id: "3Ml3KDfvM5yF1Qns", ck: "3Ml3KDfvM5yF1Qns" })</script>
+</body>
+
+</html>
